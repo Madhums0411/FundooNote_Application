@@ -2,6 +2,7 @@
 using CommonLayer.Model;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
+using RepositoryLayer.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,6 +28,20 @@ namespace BusinessLayer.Service
 
                 throw;
             }
+        }
+
+        public List<NotesEntity> GetNote(long userId)
+        {
+            try
+            {
+                return notesRL.GetNote(userId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
     }
 }

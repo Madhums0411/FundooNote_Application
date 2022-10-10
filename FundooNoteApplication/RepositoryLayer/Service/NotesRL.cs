@@ -12,7 +12,7 @@ namespace RepositoryLayer.Service
     public class NotesRL : INotesRL
     {
         private readonly FundoContext fundoContext;
-        public object UserId { get; private set; }
+        //public object UserId { get; private set; }
         public NotesRL(FundoContext fundoContext)
         {
             this.fundoContext = fundoContext;
@@ -23,12 +23,12 @@ namespace RepositoryLayer.Service
             try
             {
                 NotesEntity notesent = new NotesEntity();
-                var result = fundoContext.NotesTable.Where(e => e.UserId == UserId);
+                var result = fundoContext.NotesTable.Where(e => e.UserID == UserId);
                 if (result != null)
                 {
 
 
-                    notesent.UserId = UserId;
+                    notesent.UserID = UserId;
                     notesent.Title = notes.Title;
                     notesent.Description = notes.Description;
                     notesent.colour = notes.colour;
@@ -56,6 +56,21 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public List<NotesEntity> GetNote(long userId)
+        {
+            try
+            {
+                var result = fundoContext.NotesTable.Where(e => e.UserID == userId).ToList();
+                return result;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        
 
     }
 }

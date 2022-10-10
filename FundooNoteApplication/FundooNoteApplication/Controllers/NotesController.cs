@@ -44,5 +44,31 @@ namespace FundooNoteApplication.Controllers
                 throw;
             }
         }
+        [HttpPost]
+        [Route("Get Notes")]
+        public ActionResult GetNotes()
+        {
+            try
+            {
+                long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var result = notesBL.GetNote(UserID);
+                if (result != null)
+                {
+                    return Ok(new { success = true, message = "Read all notes", data = result });
+                }
+                else
+                {
+                    return NotFound(new { success = false, message = "Unable to read notes" });
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
     }
 }
