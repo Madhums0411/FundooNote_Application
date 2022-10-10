@@ -70,7 +70,29 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
-        
+        public bool DeleteNote(long NoteId)
+        {
+            try
+            {
+                var noteCheck = fundoContext.NotesTable.Where(x => x.NotesId == NoteId).FirstOrDefault();
+                this.fundoContext.NotesTable.Remove(noteCheck);
+                int result = this.fundoContext.SaveChanges();
+                if (result != 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
 }

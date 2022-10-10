@@ -68,7 +68,27 @@ namespace FundooNoteApplication.Controllers
                 throw;
             }
         }
+        [HttpDelete("Delete Note")]
+        public IActionResult DeleteNotesOfUser(long notesid)
+        {
+            try
 
+            {
+                long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                if (this.notesBL.DeleteNote(notesid))
+                {
+                    return this.Ok(new { Success = true, message = "Note deleted successfully" });
+                }
+                else
+                {
+                    return this.BadRequest(new { Success = false, message = "Noteid not Found" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }
