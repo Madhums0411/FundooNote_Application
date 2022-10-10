@@ -93,6 +93,36 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public bool UpdateNote(NotesModel noteModel, long noteId)
+        {
+            try
+            {
+                var update = fundoContext.NotesTable.Where(x => x.NotesId == noteId).FirstOrDefault();
+                if (update != null && update.NotesId == noteId)
+
+                {
+                    update.Title = noteModel.Title;
+                    update.Description = noteModel.Description;
+                    update.Reminder = noteModel.Reminder;
+                    update.Edited = noteModel.Edited;
+                }
+
+                int result = fundoContext.SaveChanges();
+                if (result != 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
 
     }
 }

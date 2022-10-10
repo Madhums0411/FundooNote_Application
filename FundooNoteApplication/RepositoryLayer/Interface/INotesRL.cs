@@ -11,6 +11,7 @@ namespace RepositoryLayer.Interface
         public NotesEntity Create(NotesModel notes, long UserId);
         public List<NotesEntity> GetNote(long userId);
         public bool DeleteNote(long NoteId);
+        public bool UpdateNote(NotesModel noteModel, long noteId);
 
     }
 }

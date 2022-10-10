@@ -22,7 +22,7 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("Create")]
+        [Route("Create Note")]
         public ActionResult Create(NotesModel notes)
         {
             try
@@ -89,6 +89,27 @@ namespace FundooNoteApplication.Controllers
                 throw;
             }
         }
+        [HttpPut("Update Note")]
+        public IActionResult UpdateNote(NotesModel notesModel, long noteId)
+        {
+            try
 
+            {
+                long userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var notes = this.notesBL.UpdateNote(notesModel, noteId);
+                if (notes != false)
+                {
+                    return this.Ok(new { Success = true, message = "Note updated successfully", data = notesModel });
+                }
+                else
+                {
+                    return this.BadRequest(new { Success = false, message = "Noteid not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
