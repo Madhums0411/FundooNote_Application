@@ -123,11 +123,11 @@ namespace RepositoryLayer.Service
             }
 
         }
-        public NotesEntity Pin(long NoteId, long UserId)
+        public NotesEntity PinNote(long NotesId, long UserId)
         {
             try
             {
-                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NoteId).FirstOrDefault();
+                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NotesId).FirstOrDefault();
                 if (result.Pin == true)
                 {
                     result.Pin = false;
@@ -147,6 +147,30 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public NotesEntity NoteArchive(long UserId, long NoteId)
+        {
+            try
+            {
+                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NoteId).FirstOrDefault();
+                if (result.Archive == true)
+                {
+                    result.Archive = false;
+                    fundoContext.SaveChanges();
+                    return null;
+                }
+                else
+                {
+                    result.Archive = true;
+                    fundoContext.SaveChanges();
 
+                    return result;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

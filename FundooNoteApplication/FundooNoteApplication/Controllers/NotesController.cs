@@ -91,13 +91,13 @@ namespace FundooNoteApplication.Controllers
             }
         }
         [HttpPut("Update Note")]
-        public IActionResult UpdateNote(NotesModel notesModel, long noteId)
+        public IActionResult UpdateNote(NotesModel notesModel, long notesId)
         {
             try
 
             {
                 long userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
-                var notes = this.notesBL.UpdateNote(notesModel, noteId);
+                var notes = this.notesBL.UpdateNote(notesModel, notesId);
                 if (notes != false)
                 {
                     return this.Ok(new { Success = true, message = "Note updated successfully", data = notesModel });
@@ -120,7 +120,7 @@ namespace FundooNoteApplication.Controllers
             try
             {
                 long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
-                var result = notesBL.Pin(NotesId, UserID);
+                var result = notesBL.PinNote(NotesId, UserID);
                 if (result != null)
                 {
                     return Ok(new { success = true, message = "Note Pinned Successfully", data = result });
@@ -135,6 +135,33 @@ namespace FundooNoteApplication.Controllers
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+        [Authorize]
+        [HttpPut]
+        [Route("Archive")]
+        public ActionResult ArchiveNote(long noteId)
+        {
+            try
+            {
+                long userID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var result = notesBL.NoteArchive(noteId, userID);
+                if (result != null)
+                {
+                    return Ok(new { success = true, message = "Archived Note Successfully", data = result });
+                }
+                else if (result == null)
+                {
+                    return Ok(new { success = true, message = "Archived Note UnSuccessfull", data = result });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Could not perform Archive Operation" });
+                }
+            }
+            catch (System.Exception)
+            {
                 throw;
             }
         }
