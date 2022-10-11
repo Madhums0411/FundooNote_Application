@@ -12,7 +12,7 @@ namespace RepositoryLayer.Service
     public class NotesRL : INotesRL
     {
         private readonly FundoContext fundoContext;
-        //public object UserId { get; private set; }
+        
         public NotesRL(FundoContext fundoContext)
         {
             this.fundoContext = fundoContext;
@@ -122,6 +122,30 @@ namespace RepositoryLayer.Service
                 throw;
             }
 
+        }
+        public NotesEntity Pin(long NoteId, long UserId)
+        {
+            try
+            {
+                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NoteId).FirstOrDefault();
+                if (result.Pin == true)
+                {
+                    result.Pin = false;
+                    fundoContext.SaveChanges();
+                    return result;
+                }
+                else
+                {
+                    result.Pin = true;
+                    fundoContext.SaveChanges();
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
     }

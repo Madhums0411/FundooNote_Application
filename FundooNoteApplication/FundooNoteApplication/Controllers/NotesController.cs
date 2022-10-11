@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.Context;
 using System;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace FundooNoteApplication.Controllers
 {
@@ -109,6 +110,32 @@ namespace FundooNoteApplication.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        [Authorize]
+        [HttpPut]
+        [Route("Pin Note")]
+        public ActionResult PinNote(long NotesId)
+        {
+            try
+            {
+                long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var result = notesBL.Pin(NotesId, UserID);
+                if (result != null)
+                {
+                    return Ok(new { success = true, message = "Note Pinned Successfully", data = result });
+                }
+                else if (result == null) 
+                {
+                    return Ok(new { success = false, message = "Note Pinned UnSuccessfully" });
+                }
+                return BadRequest(new { success = false, message = "Could not perform Pin Operation" });
+
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }
