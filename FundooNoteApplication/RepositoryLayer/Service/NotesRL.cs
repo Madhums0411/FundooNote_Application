@@ -1,10 +1,15 @@
-﻿using CommonLayer.Model;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using CommonLayer.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 
 namespace RepositoryLayer.Service
@@ -12,7 +17,9 @@ namespace RepositoryLayer.Service
     public class NotesRL : INotesRL
     {
         private readonly FundoContext fundoContext;
-        
+        private readonly IConfiguration configuration;
+
+
         public NotesRL(FundoContext fundoContext)
         {
             this.fundoContext = fundoContext;
@@ -147,11 +154,11 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
-        public NotesEntity NoteArchive(long UserId, long NoteId)
+        public NotesEntity NoteArchive(long UserId, long NotesId)
         {
             try
             {
-                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NoteId).FirstOrDefault();
+                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NotesId).FirstOrDefault();
                 if (result.Archive == true)
                 {
                     result.Archive = false;
@@ -171,6 +178,89 @@ namespace RepositoryLayer.Service
 
                 throw;
             }
+        }
+        public bool NoteTrash(long UserId, long NoteId)
+        {
+            try
+            {
+                var result = fundoContext.NotesTable.Where(x => x.UserID == UserId && x.NotesId == NoteId).FirstOrDefault();
+                if (result.Trash == true)
+                {
+                    result.Trash = false;
+                    fundoContext.SaveChanges();
+                    return false;
+                }
+                else
+                {
+                    result.Trash = true;
+                    fundoContext.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NotesEntity NoteColourChange(long notesId, string Colour)
+        {
+            try
+            {
+                var result = fundoContext.NotesTable.Where(x => x.NotesId == notesId).FirstOrDefault();
+                if (result != null)
+                {
+                    result.colour = Colour;
+                    fundoContext.NotesTable.Update(result);
+                    fundoContext.SaveChanges();
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+        public string Image(long userId, long notesId, IFormFile file)
+        {
+            try
+            {
+                var result = fundoContext.NotesTable.Where(u => u.UserID == userId && u.NotesId == notesId).FirstOrDefault();
+                if (result != null)
+                {
+                       Account account = new Account(
+                       this.configuration["CloudinarySettings:CloudName"],
+                       this.configuration["CloudinarySettings:ApiKey"],
+                        this.configuration["CloudinarySettings:ApiSecret"]
+                        );
+                    Cloudinary _cloudinary = new Cloudinary(account);
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    };
+                    var uploadresult = _cloudinary.Upload(uploadParams);
+                    string ImagePath = uploadresult.Url.ToString();
+                    result.Image = ImagePath;
+                    fundoContext.SaveChanges();
+                    return "Image upload Successfully";
+
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
     }
 }

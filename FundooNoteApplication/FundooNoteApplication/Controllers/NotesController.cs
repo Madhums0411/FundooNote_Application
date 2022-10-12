@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Interface;
+using BusinessLayer.Service;
 using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.Context;
 using System;
@@ -70,13 +72,13 @@ namespace FundooNoteApplication.Controllers
             }
         }
         [HttpDelete("Delete Note")]
-        public IActionResult DeleteNotesOfUser(long notesid)
+        public IActionResult DeleteNotesOfUser(long NotesId)
         {
             try
 
             {
                 long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
-                if (this.notesBL.DeleteNote(notesid))
+                if (this.notesBL.DeleteNote(NotesId))
                 {
                     return this.Ok(new { Success = true, message = "Note deleted successfully" });
                 }
@@ -91,13 +93,13 @@ namespace FundooNoteApplication.Controllers
             }
         }
         [HttpPut("Update Note")]
-        public IActionResult UpdateNote(NotesModel notesModel, long notesId)
+        public IActionResult UpdateNote(NotesModel notesModel, long NotesId)
         {
             try
 
             {
                 long userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
-                var notes = this.notesBL.UpdateNote(notesModel, notesId);
+                var notes = this.notesBL.UpdateNote(notesModel, NotesId);
                 if (notes != false)
                 {
                     return this.Ok(new { Success = true, message = "Note updated successfully", data = notesModel });
@@ -125,7 +127,7 @@ namespace FundooNoteApplication.Controllers
                 {
                     return Ok(new { success = true, message = "Note Pinned Successfully", data = result });
                 }
-                else if (result == null) 
+                else if (result == null)
                 {
                     return Ok(new { success = false, message = "Note Pinned UnSuccessfully" });
                 }
@@ -140,13 +142,13 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPut]
-        [Route("Archive")]
-        public ActionResult ArchiveNote(long noteId)
+        [Route("Archive Note")]
+        public ActionResult ArchiveNote(long notesId)
         {
             try
             {
                 long userID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
-                var result = notesBL.NoteArchive(noteId, userID);
+                var result = notesBL.NoteArchive(notesId, userID);
                 if (result != null)
                 {
                     return Ok(new { success = true, message = "Archived Note Successfully", data = result });
@@ -165,5 +167,82 @@ namespace FundooNoteApplication.Controllers
                 throw;
             }
         }
+        [Authorize]
+        [HttpPut]
+        [Route("Trash Note")]
+        public ActionResult TrashNote(long NoteId)
+        {
+            try
+            {
+                long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var result = notesBL.NoteTrash(UserID, NoteId);
+                if (result != false)
+                {
+                    return Ok(new { success = true, message = "Trashed Note" });
+                }
+                else if (result != true)
+                {
+                    return Ok(new { success = true, message = "Notes Trashed Successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Could not Perform Trash Operation" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        [Authorize]
+        [HttpPut]
+        [Route("Colour Note")]
+        public IActionResult ColourChange(long notesId, string Colour)
+        {
+            try
+            {
+                long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var resdata = notesBL.NoteColourChange(notesId, Colour);
+                if (resdata != null)
+                {
+                    return this.Ok(new { success = true, message = "Colour changed Successfully", data = resdata });
+                }
+                else
+                {
+                    return this.BadRequest(new { success = false, message = "Colour not Changed" });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPut]
+        [Route("Image")]
+        public IActionResult Image(IFormFile image, long notesId)
+        {
+            try
+            {
+                long UserID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserID").Value);
+                var result = notesBL.Image(UserID, notesId, image);
+                if (result != null)
+                {
+                    return Ok(new { success = true, message = "Image Uploaded Succesfully", data = result });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Image NotUploaded" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

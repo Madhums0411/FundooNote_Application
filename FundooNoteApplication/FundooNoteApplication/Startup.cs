@@ -48,7 +48,7 @@ namespace FundooNoteApplication
                 opt.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Implement Swagger UI",
+                    Title = "Fundoo Note Application",
                     Description = "A simple example to Implement Swagger UI",
                 });
                 opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

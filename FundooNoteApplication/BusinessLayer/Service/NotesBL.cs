@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Service;
@@ -79,17 +80,53 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public NotesEntity NoteArchive(long UserId, long NoteId)
+        public NotesEntity NoteArchive(long UserId, long NotesId)
         {
             try
             {
-                return notesRL.NoteArchive(UserId, NoteId);
+                return notesRL.NoteArchive(UserId, NotesId);
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+        public bool NoteTrash(long UserId, long NoteId)
+        {
+            try
+            {
+                return notesRL.NoteTrash(UserId, NoteId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NotesEntity NoteColourChange(long notesId, string Colour)
+        {
+            try
+            {
+                return notesRL.NoteColourChange(notesId, Colour);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+        public string Image(long userId, long notesId, IFormFile file)
+        {
+            try
+            {
+                return notesRL.Image(userId, notesId, file);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
     }
 }
