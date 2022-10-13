@@ -27,5 +27,28 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
+        public string DeleteCollab(long collabId, string email)
+        {
+            try
+            {
+                return collabRL.DeleteCollab(collabId, email);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public List<CollabEntity> GetCollab(long userId)
+        {
+            try
+            {
+                return collabRL.GetCollab(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
