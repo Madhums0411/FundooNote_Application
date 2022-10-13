@@ -25,7 +25,7 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("Create Note")]
+        [Route("Create")]
         public ActionResult Create(NotesModel notes)
         {
             try
@@ -48,7 +48,7 @@ namespace FundooNoteApplication.Controllers
             }
         }
         [HttpPost]
-        [Route("Get Notes")]
+        [Route("Get All")]
         public ActionResult GetNotes()
         {
             try
@@ -71,7 +71,7 @@ namespace FundooNoteApplication.Controllers
                 throw;
             }
         }
-        [HttpDelete("Delete Note")]
+        [HttpDelete("Delete")]
         public IActionResult DeleteNotesOfUser(long NotesId)
         {
             try
@@ -92,7 +92,7 @@ namespace FundooNoteApplication.Controllers
                 throw;
             }
         }
-        [HttpPut("Update Note")]
+        [HttpPut("Update")]
         public IActionResult UpdateNote(NotesModel notesModel, long NotesId)
         {
             try
@@ -116,7 +116,7 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPut]
-        [Route("Pin Note")]
+        [Route("Pin")]
         public ActionResult PinNote(long NotesId)
         {
             try
@@ -142,7 +142,7 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPut]
-        [Route("Archive Note")]
+        [Route("Archive")]
         public ActionResult ArchiveNote(long notesId)
         {
             try
@@ -169,7 +169,7 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPut]
-        [Route("Trash Note")]
+        [Route("Trash")]
         public ActionResult TrashNote(long NoteId)
         {
             try
@@ -197,7 +197,7 @@ namespace FundooNoteApplication.Controllers
         }
         [Authorize]
         [HttpPut]
-        [Route("Colour Note")]
+        [Route("Colour")]
         public IActionResult ColourChange(long notesId, string Colour)
         {
             try
