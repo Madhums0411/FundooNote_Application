@@ -2,6 +2,8 @@
 using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Security.Claims;
 
 namespace FundooNoteApplication.Controllers
@@ -11,9 +13,12 @@ namespace FundooNoteApplication.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserBL userBL;
-        public UserController(IUserBL userBL)
+        private readonly ILogger<UserController> _logger;
+
+        public UserController(IUserBL userBL, ILogger<UserController> _logger)
         {
             this.userBL = userBL;
+            this._logger = _logger;
         }
         [HttpPost]
         [Route("Register")]
@@ -24,16 +29,19 @@ namespace FundooNoteApplication.Controllers
                 var result = userBL.Register(userRegistration);
                 if (result != null)
                 {
+                    _logger.LogInformation("Registration Succesfull");
                     return Ok(new { success = true, message = "Registration Successfull", data = result });
                 }
                 else
                 {
+                    _logger.LogInformation("Unsuccessfull");
                     return NotFound(new { success = false, message = "Unsuccessfull" });
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex.Message);
+                throw ex;
             }
         }
         [HttpPost]
@@ -45,17 +53,19 @@ namespace FundooNoteApplication.Controllers
                 var result = userBL.Login(userLogin);
                 if (result != null)
                 {
+                    _logger.LogInformation("Login is Successfull");
                     return Ok(new { success = true, message = "Login is Successfull", data = result });
                 }
                 else
                 {
+                    _logger.LogInformation("Login is Not Successfull");
                     return BadRequest(new { success = false, message = "Login is Not Successfull" });
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex.Message);
+                throw ex;
             }
         }
 
@@ -68,17 +78,19 @@ namespace FundooNoteApplication.Controllers
                 var result = userBL.ForgotPassword(Email);
                 if (result != null)
                 {
+                    _logger.LogInformation("Email Sent Successfully");
                     return Ok(new { success = true, message = "Email Sent Successfully", data = result });
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "Eamil reset Could Not Be Sent" });
+                    _logger.LogInformation("Email reset Could Not Be Sent");
+                    return BadRequest(new { success = false, message = "Email reset Could Not Be Sent" });
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex.Message);
+                throw ex;
             }
         }
         [Authorize]
@@ -92,18 +104,20 @@ namespace FundooNoteApplication.Controllers
 
                 if (userBL.ResetPassword(Password, ConfirmPassword))
                 {
+                    _logger.LogInformation("Reset Password is Succesfull");
                     return Ok(new { success = true, message = "Reset Password is Succesfull" });
                 }
                 else
                 {
+                    _logger.LogInformation("Reset Password Link Could Not Be Sent");
                     return BadRequest(new { success = false, message = "Reset Password Link Could Not Be Sent" });
                 }
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex.Message);
+                throw ex;
             }
         }
     }

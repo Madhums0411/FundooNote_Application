@@ -30,7 +30,7 @@ namespace RepositoryLayer.Service
                 user.FirstName = userRegistration.FirstName;
                 user.LastName = userRegistration.LastName;
                 user.Email = userRegistration.Email;
-                user.Password = userRegistration.Password;
+                user.Password = EncryptPassword(userRegistration.Password);
                 fundoContext.UserTable.Add(user);
                 int res = fundoContext.SaveChanges();
                 if (res > 0)
@@ -137,18 +137,10 @@ namespace RepositoryLayer.Service
         }
         public string EncryptPassword(string password)
         {
-            try
-            {
-                string msg = "";
-                byte[] encode = new byte[password.Length];
-                encode = Encoding.UTF8.GetBytes(password);
-                msg = Convert.ToBase64String(encode);
-                return msg;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            if (string.IsNullOrEmpty(password)) return "";
+            password += "";
+            var passwordBytes = Encoding.UTF8.GetBytes(password);
+            return Convert.ToBase64String(passwordBytes);
         }
         public string Decrypt(string base64EncodedData)
         {
