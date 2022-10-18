@@ -116,11 +116,11 @@ namespace BusinessLayer.Service
                 throw new Exception(ex.Message);
             }
         }
-        public string Image(long userId, long notesId, IFormFile file)
+        public string Image(long UserId, long notesId, IFormFile file)
         {
             try
             {
-                return notesRL.Image(userId, notesId, file);
+                return notesRL.Image(UserId, notesId, file);
             }
             catch (Exception ex)
             {
@@ -130,3 +130,4 @@ namespace BusinessLayer.Service
         }
     }
 }
+

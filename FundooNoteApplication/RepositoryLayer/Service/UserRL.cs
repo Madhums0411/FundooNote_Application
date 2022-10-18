@@ -135,5 +135,20 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public string EncryptPassword(string password)
+        {
+            try
+            {
+                string msg = "";
+                byte[] encode = new byte[password.Length];
+                encode = Encoding.UTF8.GetBytes(password);
+                msg = Convert.ToBase64String(encode);
+                return msg;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

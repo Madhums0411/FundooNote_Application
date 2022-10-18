@@ -17,7 +17,7 @@ namespace RepositoryLayer.Interface
         public NotesEntity NoteArchive(long UserId, long NotesId);
         public bool NoteTrash(long UserId, long NoteId);
         public NotesEntity NoteColourChange(long notesId, string Colour);
-        public string Image(long userId, long notesId, IFormFile file);
+        public string Image(long UserId, long notesId, IFormFile file);
 
 
     }

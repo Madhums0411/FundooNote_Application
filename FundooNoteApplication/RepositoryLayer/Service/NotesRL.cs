@@ -17,14 +17,15 @@ namespace RepositoryLayer.Service
     public class NotesRL : INotesRL
     {
         private readonly FundoContext fundoContext;
+        //public object UserId { get; private set; }
         private readonly IConfiguration configuration;
-
-
-        public NotesRL(FundoContext fundoContext)
+        public NotesRL(FundoContext fundoContext, IConfiguration configuration)
         {
             this.fundoContext = fundoContext;
+            this.configuration = configuration;
 
         }
+        
         public NotesEntity Create(NotesModel notes, long UserId)
         {
             try
@@ -233,7 +234,7 @@ namespace RepositoryLayer.Service
                 var result = fundoContext.NotesTable.Where(u => u.UserID == userId && u.NotesId == notesId).FirstOrDefault();
                 if (result != null)
                 {
-                       Account account = new Account(
+                    Account account = new Account(
                        this.configuration["CloudinarySettings:CloudName"],
                        this.configuration["CloudinarySettings:ApiKey"],
                         this.configuration["CloudinarySettings:ApiSecret"]
@@ -262,5 +263,7 @@ namespace RepositoryLayer.Service
             }
 
         }
+
+
     }
 }
