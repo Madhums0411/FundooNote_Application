@@ -38,7 +38,7 @@ namespace FundooNoteApplication.Controllers
         }
 
         [Authorize]
-        [HttpPost("CreateLabel")]
+        [HttpPost("Create")]
 
         public IActionResult CreateLabel(long notesId, string LabelName)
         {
